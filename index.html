@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article નિયમો અને ક્વિઝ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .rules-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .rules-header {
+            background: #2196F3;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .slide {
+            display: none;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        .rule-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid;
+        }
+        
+        .card-a { border-left-color: #FF5722; }
+        .card-an { border-left-color: #4CAF50; }
+        .card-the { border-left-color: #2196F3; }
+        
+        .rule-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .title-a { background: #FF5722; }
+        .title-an { background: #4CAF50; }
+        .title-the { background: #2196F3; }
+        
+        .simple-rule {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .rule-explanation {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .examples {
+            background: #f1f8e9;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        .example-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 5px;
+        }
+        
+        .example-emoji {
+            font-size: 20px;
+            margin-right: 10px;
+            width: 30px;
+        }
+        
+        .example-text {
+            flex: 1;
+        }
+        
+        .trick-box {
+            background: #fff3e0;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid #FF9800;
+        }
+        
+        .trick-title {
+            font-weight: bold;
+            color: #E65100;
+            margin-bottom: 5px;
+        }
+        
+        .slide-nav {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            background: #f5f5f5;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .quiz-start-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .slide-dots {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background: #f5f5f5;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #ccc;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        
+        .dot.active {
+            background: #2196F3;
+        }
+
+        /* Footer Styles */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #333;
+            color: white;
+            font-size: 14px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .school-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .teacher-name {
+            font-style: italic;
+        }
+
+        /* Quiz Styles - Initially Hidden */
+        .quiz-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .quiz-section.active {
+            display: block;
+        }
+        
+        .quiz-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .back-to-rules {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-rules:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .question-container {
+            padding: 20px;
+        }
+        
+        .question-box {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .question-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 3px dashed #4CAF50;
+            margin: 0 5px;
+            padding: 0 10px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .option-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn.selected {
+            background: #4CAF50;
+            transform: scale(1.05);
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 24px;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .next-btn {
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .score-container {
+            text-align: center;
+            padding: 12px;
+            font-size: 16px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Simple Word Quiz Styles */
+        .word-quiz-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .word-display {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2196F3;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .quiz-type-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-type-btn {
+            background: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-type-btn.active {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .word-sentence {
+            font-size: 24px;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        
+        .word-blank {
+            display: inline-block;
+            min-width: 60px;
+            border-bottom: 3px dashed #4CAF50;
+            margin: 0 5px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .word-filled {
+            display: inline-block;
+            min-width: 60px;
+            margin: 0 5px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        .special-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        /* New Slideshow Styles */
+        .app-slideshow {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .app-slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+        
+        .app-slide-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 20px;
+            z-index: 10;
+        }
+        
+        .app-nav-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            flex: 1;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Slideshow -->
+        <div class="app-slideshow">
+            <!-- Rules Slide -->
+            <div class="app-slide active" id="appSlide1">
+                <div class="rules-section">
+                    <div class="rules-header">
+                        <h2>Article નિયમો - સરળ સમજ</h2>
+                        <p>ખૂબ જ સરળ રીતે સમજો a, an, the ના નિયમો</p>
+                    </div>
+                    
+                    <div class="slideshow-container">
+                        <!-- Slide 1: A -->
+                        <div class="slide active" id="slide1">
+                            <div class="rule-card card-a">
+                                <div class="rule-title title-a">A નો ઉપયોગ</div>
+                                
+                                <div class="simple-rule">"કોઈ એક" - જેની શરૂઆત વ્યંજન અવાજથી થાય</div>
+                                
+                                <div class="rule-explanation">
+                                    <strong>સરળ નિયમ:</strong> જે શબ્દનો પહેલો અવાજ B, C, D, F, G, H, J, K, L, M, N, P, Q, R, S, T, V, W, X, Y, Z જેવો લાગે તે પહેલાં "a" વાપરો.
+                                </div>
+                                
+                                <div class="examples">
+                                    <div class="example-item">
+                                        <span class="example-emoji">👦</span>
+                                        <span class="example-text"><strong>a boy</strong> - એક છોકરો</span>
+                                    </div>
+                                    <div class="example-item">
+                                        <span class="example-emoji">🚗</span>
+                                        <span class="example-text"><strong>a car</strong> - એક કાર</span>
+                                    </div>
+                                    <div class="example-item">
+                                        <span class="example-emoji">🏫</span>
+                                        <span class="example-text"><strong>a university</strong> - એક યુનિવર્સિટી</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 2: AN -->
+                        <div class="slide" id="slide2">
+                            <div class="rule-card card-an">
+                                <div class="rule-title title-an">AN નો ઉપયોગ</div>
+                                
+                                <div class="simple-rule">"કોઈ એક" - જેની શરૂઆત સ્વર અવાજથી થાય</div>
+                                
+                                <div class="rule-explanation">
+                                    <strong>સરળ નિયમ:</strong> જે શબ્દનો પહેલો અવાજ A, E, I, O, U જેવો લાગે તે પહેલાં "an" વાપરો.
+                                </div>
+                                
+                                <div class="examples">
+                                    <div class="example-item">
+                                        <span class="example-emoji">🍎</span>
+                                        <span class="example-text"><strong>an apple</strong> - એક સફરજન</span>
+                                    </div>
+                                    <div class="example-item">
+                                        <span class="example-emoji">🐘</span>
+                                        <span class="example-text"><strong>an elephant</strong> - એક હાથી</span>
+                                    </div>
+                                    <div class="example-item">
+                                        <span class="example-emoji">⏰</span>
+                                        <span class="example-text"><strong>an hour</strong> - એક કલાક (H શાંત)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 3: THE -->
+                        <div class="slide" id="slide3">
+                            <div class="rule-card card-the">
+                                <div class="rule-title title-the">THE નો ઉપયોગ</div>
+                                
+                                <div class="simple-rule">"એ જ" - ખાસ કોઈ વસ્તુ માટે</div>
+                                
+                                <div class="rule-explanation">
+                                    <strong>સરળ નિયમ:</strong> જ્યારે આપણે કોઈ ચોક્કસ વસ્તુની વાત કરી રહ્યા હોઈએ, અથવા એ વસ્તુ એકમાત્ર હોય ત્યારે "the" વાપરો.
+                                </div>
+                                
+                                <div class="examples">
+                                    <div class="example-item">
+                                        <span class="example-emoji">☀️</span>
+                                        <span class="example-text"><strong>the sun</strong> - સૂરજ (દુનિયામાં એક જ છે)</span>
+                                    </div>
+                                    <div class="example-item">
+                                        <span class="example-emoji">🌙</span>
+                                        <span class="example-text"><strong>the moon</strong> - ચંદ્ર (એક જ છે)</span>
+                                    </div>
+                                    <div class="example-item">
+                                        <span class="example-emoji">🚪</span>
+                                        <span class="example-text"><strong>the door</strong> - દરવાજો (ઓરડાનો એ જ દરવાજો)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 4: Quick Comparison -->
+                        <div class="slide" id="slide4">
+                            <div class="rule-card" style="border-left-color: #9C27B0;">
+                                <div class="rule-title" style="background: #9C27B0;">સરળ તુલના</div>
+                                
+                                <div class="simple-rule">A vs AN vs THE - ક્યારે કયો વાપરવો?</div>
+                                
+                                <div class="rule-explanation">
+                                    <strong>સારાંશ:</strong>
+                                    <ul>
+                                        <li><strong>A:</strong> વ્યંજન અવાજથી શરૂ થાય તે શબ્દ પહેલાં</li>
+                                        <li><strong>AN:</strong> સ્વર અવાજથી શરૂ થાય તે શબ્દ પહેલાં</li>
+                                        <li><strong>THE:</strong> ચોક્કસ અથવા એકમાત્ર વસ્તુ માટે</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="trick-box">
+                                    <div class="trick-title">💡 યાદ રાખો:</div>
+                                    અવાજ પર ધ્યાન આપો, લખાણ પર નહીં!<br>
+                                    "hour" → 'અ'વર → an hour<br>
+                                    "university" → 'યુ'નિવર્સિટી → a university
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slide-nav">
+                        <button class="nav-btn" id="prevBtn" disabled>⬅️ પાછળ</button>
+                        <button class="nav-btn" id="nextBtn">આગળ ➡️</button>
+                        <button class="quiz-start-btn">🎯 ક્વિઝ શરૂ કરો</button>
+                    </div>
+                    
+                    <div class="slide-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="footer">
+                        <div class="school-name">Pipardi-2 Primary School</div>
+                        <div class="teacher-name">Makvana Sanjaysir</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quiz Slide -->
+            <div class="app-slide" id="appSlide2">
+                <!-- Quiz Section -->
+                <div class="quiz-section active">
+                    <div class="quiz-header">
+                        <h2>Article ક્વિઝ</h2>
+                        <p>નિયમો સમજ્યા પછી પરીક્ષણ કરો</p>
+                        <button class="back-to-rules">⬅️ નિયમો પર પાછા જાવ</button>
+                    </div>
+                    
+                    <div class="quiz-type-selector">
+                        <button class="quiz-type-btn active" id="wordQuizBtn">શબ્દ ક્વિઝ</button>
+                        <button class="quiz-type-btn" id="sentenceQuizBtn">વાક્ય ક્વિઝ</button>
+                    </div>
+                    
+                    <!-- Word Quiz Section -->
+                    <div class="question-container" id="wordQuiz">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="wordProgressFill"></div>
+                        </div>
+                        
+                        <div class="word-quiz-container">
+                            <div class="word-display" id="wordDisplay"></div>
+                            <div class="word-sentence">
+                                <span id="wordBlank" class="word-blank">___</span>
+                                <span id="wordText"></span>
+                            </div>
+                            <div class="special-note" id="specialNote" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="options-container" id="wordOptionsContainer">
+                            <!-- Options will be added by JavaScript -->
+                        </div>
+                        
+                        <div class="feedback" id="wordFeedback"></div>
+                        
+                        <button class="next-btn" id="wordNextBtn" disabled>આગળનો શબ્દ</button>
+                    </div>
+                    
+                    <!-- Sentence Quiz Section -->
+                    <div class="question-container" id="sentenceQuiz" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        
+                        <div class="question-box">
+                            <div class="question-text" id="questionText">
+                                <span id="sentencePart1"></span>
+                                <span class="blank" id="blankSpace">___</span>
+                                <span id="sentencePart2"></span>
+                            </div>
+                            <div class="special-note" id="sentenceSpecialNote" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="options-container" id="optionsContainer">
+                            <!-- Options will be added by JavaScript -->
+                        </div>
+                        
+                        <div class="feedback" id="feedback"></div>
+                        
+                        <button class="next-btn" id="quizNextBtn" disabled>આગળનો પ્રશ્ન</button>
+                    </div>
+                    
+                    <div class="score-container">
+                        સ્કોર: <span id="score">0</span> / <span id="totalQuestions">0</span>
+                    </div>
+
+                    <!-- Footer in Quiz Section -->
+                    <div class="footer">
+                        <div class="school-name">Pipardi-2 Primary School</div>
+                        <div class="teacher-name">Makvana Sanjaysir</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sentence-based quiz questions
+        const sentenceQuestions = [
+            {
+                part1: "I saw",
+                part2: "elephant at the zoo.",
+                answer: "an",
+                explanation: "'elephant' શબ્દ 'e' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ."
+            },
+            {
+                part1: "She is",
+                part2: "honest person.",
+                answer: "an",
+                explanation: "'honest' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'o' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ."
+            },
+            {
+                part1: "He has",
+                part2: "umbrella.",
+                answer: "an",
+                explanation: "'umbrella' શબ્દ 'u' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ."
+            },
+            {
+                part1: "This is",
+                part2: "book.",
+                answer: "a",
+                explanation: "'book' શબ્દ 'b' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ."
+            },
+            {
+                part1: "I need",
+                part2: "hour to finish this work.",
+                answer: "an",
+                explanation: "'hour' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'a' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'hour'માં 'h' શાંત છે, તેથી અવાજ 'a'થી શરૂ થાય છે!"
+            },
+            {
+                part1: "She is",
+                part2: "university student.",
+                answer: "a",
+                explanation: "'university' શબ્દ 'u' અક્ષરથી શરૂ થાય છે પણ અવાજ 'y' જેવો થાય છે, તેથી 'a' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'university'નો અવાજ 'y'થી શરૂ થાય છે, 'u'થી નહીં!"
+            },
+            {
+                part1: "We went to",
+                part2: "same school.",
+                answer: "the",
+                explanation: "'same' શબ્દ ચોક્કસતા દર્શાવે છે, તેથી 'the' વાપરવું જોઈએ."
+            },
+            {
+                part1: "Look at",
+                part2: "moon! It's so bright tonight.",
+                answer: "the",
+                explanation: "'moon' એકમાત્ર છે, તેથી 'the' વાપરવું જોઈએ."
+            },
+            {
+                part1: "He is",
+                part2: "engineer.",
+                answer: "an",
+                explanation: "'engineer' શબ્દ 'e' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ."
+            },
+            {
+                part1: "Can you pass me",
+                part2: "salt, please?",
+                answer: "the",
+                explanation: "'salt' અહીં ચોક્કસ (ટેબલ પરનું) છે, તેથી 'the' વાપરવું જોઈએ."
+            },
+            {
+                part1: "I bought",
+                part2: "new car yesterday.",
+                answer: "a",
+                explanation: "'car' શબ્દ 'c' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ."
+            },
+            {
+                part1: "She wants to be",
+                part2: "actress.",
+                answer: "an",
+                explanation: "'actress' શબ્દ 'a' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ."
+            },
+            {
+                part1: "We visited",
+                part2: "Taj Mahal last year.",
+                answer: "the",
+                explanation: "'Taj Mahal' ખાસ સ્થળ છે, તેથી 'the' વાપરવું જોઈએ."
+            },
+            {
+                part1: "He is",
+                part2: "MBA graduate.",
+                answer: "an",
+                explanation: "'MBA' અક્ષર 'M'થી શરૂ થાય છે પણ અવાજ 'em' જેવો થાય છે, જે સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'MBA'નો અવાજ 'em'થી શરૂ થાય છે જે સ્વર છે!"
+            },
+            {
+                part1: "It was",
+                part2: "honor to meet you.",
+                answer: "an",
+                explanation: "'honor' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'o' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'honor'માં 'h' શાંત છે, તેથી અવાજ 'o'થી શરૂ થાય છે!"
+            },
+            {
+                part1: "She is",
+                part2: "European citizen.",
+                answer: "a",
+                explanation: "'European' શબ્દ 'E' અક્ષરથી શરૂ થાય છે પણ અવાજ 'y' જેવો થાય છે, તેથી 'a' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'European'નો અવાજ 'y'થી શરૂ થાય છે, 'E'થી નહીં!"
+            },
+            {
+                part1: "He waited for",
+                part2: "hour before leaving.",
+                answer: "an",
+                explanation: "'hour' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'a' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'hour'માં 'h' શાંત છે, તેથી અવાજ 'a'થી શરૂ થાય છે!"
+            },
+            {
+                part1: "This is",
+                part2: "unique opportunity.",
+                answer: "a",
+                explanation: "'unique' શબ્દ 'u' અક્ષરથી શરૂ થાય છે પણ અવાજ 'y' જેવો થાય છે, તેથી 'a' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'unique'નો અવાજ 'y'થી શરૂ થાય છે, 'u'થી નહીં!"
+            },
+            {
+                part1: "He is",
+                part2: "honest man.",
+                answer: "an",
+                explanation: "'honest' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'o' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ.",
+                specialNote: "💡 યાદ રાખો: 'honest'માં 'h' શાંત છે, તેથી અવાજ 'o'થી શરૂ થાય છે!"
+            }
+        ];
+
+        // Word-based quiz questions (from the screenshot)
+        const wordQuestions = [
+            { word: "orange", answer: "an", explanation: "'orange' શબ્દ 'o' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ." },
+            { word: "dog", answer: "a", explanation: "'dog' શબ્દ 'd' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "cat", answer: "a", explanation: "'cat' શબ્દ 'c' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "elephant", answer: "an", explanation: "'elephant' શબ્દ 'e' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ." },
+            { word: "cake", answer: "a", explanation: "'cake' શબ્દ 'c' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "egg", answer: "an", explanation: "'egg' શબ્દ 'e' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ." },
+            { word: "tree", answer: "a", explanation: "'tree' શબ્દ 't' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "ant", answer: "an", explanation: "'ant' શબ્દ 'a' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ." },
+            { word: "eye", answer: "an", explanation: "'eye' શબ્દ 'e' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ." },
+            { word: "ball", answer: "a", explanation: "'ball' શબ્દ 'b' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "book", answer: "a", explanation: "'book' શબ્દ 'b' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "tomato", answer: "a", explanation: "'tomato' શબ્દ 't' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "mouse", answer: "a", explanation: "'mouse' શબ્દ 'm' વ્યંજનથી શરૂ થાય છે, તેથી 'a' વાપરવું જોઈએ." },
+            { word: "ear", answer: "an", explanation: "'ear' શબ્દ 'e' સ્વરથી શરૂ થાય છે, તેથી 'an' વાપરવું જોઈએ." },
+            { word: "hour", answer: "an", explanation: "'hour' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'a' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ.", specialNote: "💡 યાદ રાખો: 'hour'માં 'h' શાંત છે!" },
+            { word: "university", answer: "a", explanation: "'university' શબ્દ 'u' અક્ષરથી શરૂ થાય છે પણ અવાજ 'y' જેવો થાય છે, તેથી 'a' વાપરવું જોઈએ.", specialNote: "💡 યાદ રાખો: 'university'નો અવાજ 'y'થી શરૂ થાય છે!" },
+            { word: "honest", answer: "an", explanation: "'honest' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'o' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ.", specialNote: "💡 યાદ રાખો: 'honest'માં 'h' શાંત છે!" },
+            { word: "European", answer: "a", explanation: "'European' શબ્દ 'E' અક્ષરથી શરૂ થાય છે પણ અવાજ 'y' જેવો થાય છે, તેથી 'a' વાપરવું જોઈએ.", specialNote: "💡 યાદ રાખો: 'European'નો અવાજ 'y'થી શરૂ થાય છે!" },
+            { word: "honor", answer: "an", explanation: "'honor' શબ્દ 'h' અક્ષરથી શરૂ થાય છે પણ 'h' શાંત હોવાથી અવાજ 'o' જેવો થાય છે, તેથી 'an' વાપરવું જોઈએ.", specialNote: "💡 યાદ રાખો: 'honor'માં 'h' શાંત છે!" }
+        ];
+
+        // App Slideshow Functionality
+        let currentAppSlide = 0;
+        const appSlides = document.querySelectorAll('.app-slide');
+        
+        // Rules Slideshow Functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const quizStartBtn = document.querySelector('.quiz-start-btn');
+        const backToRulesBtn = document.querySelector('.back-to-rules');
+        const sentenceQuizBtn = document.getElementById('sentenceQuizBtn');
+        const wordQuizBtn = document.getElementById('wordQuizBtn');
+        const sentenceQuiz = document.getElementById('sentenceQuiz');
+        const wordQuiz = document.getElementById('wordQuiz');
+        
+        // Initialize slideshow navigation
+        function initSlideshow() {
+            // Add event listeners to navigation buttons
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            quizStartBtn.addEventListener('click', startQuiz);
+            backToRulesBtn.addEventListener('click', backToRules);
+            
+            // Add event listeners to quiz type buttons
+            sentenceQuizBtn.addEventListener('click', () => switchQuizType('sentence'));
+            wordQuizBtn.addEventListener('click', () => switchQuizType('word'));
+            
+            // Add event listeners to dots
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => goToSlide(index));
+            });
+            
+            showSlide(currentSlide);
+        }
+        
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            currentSlide = n;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+            
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+        
+        function goToSlide(n) {
+            showSlide(n);
+        }
+        
+        function showAppSlide(n) {
+            appSlides.forEach(slide => slide.classList.remove('active'));
+            currentAppSlide = n;
+            appSlides[currentAppSlide].classList.add('active');
+        }
+
+        // Switch between sentence and word quiz
+        function switchQuizType(type) {
+            if (type === 'sentence') {
+                sentenceQuizBtn.classList.add('active');
+                wordQuizBtn.classList.remove('active');
+                sentenceQuiz.style.display = 'block';
+                wordQuiz.style.display = 'none';
+                initSentenceQuiz();
+            } else {
+                sentenceQuizBtn.classList.remove('active');
+                wordQuizBtn.classList.add('active');
+                sentenceQuiz.style.display = 'none';
+                wordQuiz.style.display = 'block';
+                initWordQuiz();
+            }
+        }
+
+        // Start Quiz Function
+        function startQuiz() {
+            // Switch to quiz slide
+            showAppSlide(1);
+            // Initialize word quiz by default
+            switchQuizType('word');
+        }
+
+        // Back to Rules Function
+        function backToRules() {
+            // Switch back to rules slide
+            showAppSlide(0);
+        }
+        
+        // Sentence Quiz Functionality
+        let currentSentenceQuestion = 0;
+        let sentenceScore = 0;
+        let selectedSentenceOption = null;
+        
+        function initSentenceQuiz() {
+            currentSentenceQuestion = 0;
+            sentenceScore = 0;
+            selectedSentenceOption = null;
+            updateScore();
+            showSentenceQuestion();
+        }
+        
+        function showSentenceQuestion() {
+            const question = sentenceQuestions[currentSentenceQuestion];
+            document.getElementById('sentencePart1').textContent = question.part1;
+            document.getElementById('sentencePart2').textContent = question.part2;
+            
+            // Show special note if available
+            const specialNote = document.getElementById('sentenceSpecialNote');
+            if (question.specialNote) {
+                specialNote.textContent = question.specialNote;
+                specialNote.style.display = 'block';
+            } else {
+                specialNote.style.display = 'none';
+            }
+            
+            // Clear previous options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            // Create option buttons
+            const options = ['a', 'an', 'the'];
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.addEventListener('click', () => selectSentenceOption(option, button));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Reset UI
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('quizNextBtn').disabled = true;
+            selectedSentenceOption = null;
+            
+            // Update progress
+            const progress = ((currentSentenceQuestion) / sentenceQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+        
+        function selectSentenceOption(option, button) {
+            // Deselect previous option
+            document.querySelectorAll('#optionsContainer .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Select new option
+            button.classList.add('selected');
+            selectedSentenceOption = option;
+            document.getElementById('quizNextBtn').disabled = false;
+        }
+        
+        function nextSentenceQuestion() {
+            if (selectedSentenceOption === null) return;
+            
+            const question = sentenceQuestions[currentSentenceQuestion];
+            const feedback = document.getElementById('feedback');
+            
+            // Check answer
+            if (selectedSentenceOption === question.answer) {
+                feedback.textContent = '✅ સાચો જવાબ! ' + question.explanation;
+                feedback.className = 'feedback correct';
+                sentenceScore++;
+                updateScore();
+            } else {
+                feedback.textContent = '❌ ખોટો જવાબ. સાચો જવાબ છે: ' + question.answer + '. ' + question.explanation;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            // Move to next question or end quiz
+            currentSentenceQuestion++;
+            
+            if (currentSentenceQuestion < sentenceQuestions.length) {
+                document.getElementById('quizNextBtn').textContent = 'આગળનો પ્રશ્ન';
+                document.getElementById('quizNextBtn').onclick = nextSentenceQuestion;
+                document.getElementById('quizNextBtn').disabled = true;
+                
+                // Auto-advance after a delay
+                setTimeout(() => {
+                    showSentenceQuestion();
+                }, 2500);
+            } else {
+                document.getElementById('quizNextBtn').textContent = 'ક્વિઝ ફરી શરૂ કરો';
+                document.getElementById('quizNextBtn').onclick = () => initSentenceQuiz();
+                document.getElementById('quizNextBtn').disabled = false;
+                
+                // Show final score
+                feedback.textContent = `ક્વિઝ પૂર્ણ! તમારો સ્કોર: ${sentenceScore}/${sentenceQuestions.length}`;
+                
+                // Update progress to 100%
+                document.getElementById('progressFill').style.width = '100%';
+            }
+        }
+        
+        // Word Quiz Functionality
+        let currentWordQuestion = 0;
+        let wordScore = 0;
+        let selectedWordOption = null;
+        
+        function initWordQuiz() {
+            currentWordQuestion = 0;
+            wordScore = 0;
+            selectedWordOption = null;
+            updateScore();
+            showWordQuestion();
+        }
+        
+        function showWordQuestion() {
+            const question = wordQuestions[currentWordQuestion];
+            document.getElementById('wordDisplay').textContent = question.word;
+            document.getElementById('wordText').textContent = question.word;
+            
+            // Show special note if available
+            const specialNote = document.getElementById('specialNote');
+            if (question.specialNote) {
+                specialNote.textContent = question.specialNote;
+                specialNote.style.display = 'block';
+            } else {
+                specialNote.style.display = 'none';
+            }
+            
+            // Reset the blank
+            const wordBlank = document.getElementById('wordBlank');
+            wordBlank.textContent = '___';
+            wordBlank.className = 'word-blank';
+            
+            // Clear previous options
+            const optionsContainer = document.getElementById('wordOptionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            // Create option buttons
+            const options = ['a', 'an', 'the'];
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.addEventListener('click', () => selectWordOption(option, button, question));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Reset UI
+            document.getElementById('wordFeedback').textContent = '';
+            document.getElementById('wordFeedback').className = 'feedback';
+            document.getElementById('wordNextBtn').disabled = true;
+            selectedWordOption = null;
+            
+            // Update progress
+            const progress = ((currentWordQuestion) / wordQuestions.length) * 100;
+            document.getElementById('wordProgressFill').style.width = `${progress}%`;
+        }
+        
+        function selectWordOption(option, button, question) {
+            // Deselect previous option
+            document.querySelectorAll('#wordOptionsContainer .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Select new option
+            button.classList.add('selected');
+            selectedWordOption = option;
+            
+            // Automatically fill the blank with the selected option
+            const wordBlank = document.getElementById('wordBlank');
+            wordBlank.textContent = option;
+            wordBlank.className = 'word-filled';
+            
+            // Enable next button
+            document.getElementById('wordNextBtn').disabled = false;
+            
+            // Check answer immediately and show feedback
+            const feedback = document.getElementById('wordFeedback');
+            
+            if (selectedWordOption === question.answer) {
+                feedback.textContent = '✅ સાચો જવાબ! ' + question.explanation;
+                feedback.className = 'feedback correct';
+                wordScore++;
+                updateScore();
+            } else {
+                feedback.textContent = '❌ ખોટો જવાબ. સાચો જવાબ છે: ' + question.answer + '. ' + question.explanation;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+        
+        function nextWordQuestion() {
+            if (selectedWordOption === null) return;
+            
+            // Move to next question or end quiz
+            currentWordQuestion++;
+            
+            if (currentWordQuestion < wordQuestions.length) {
+                document.getElementById('wordNextBtn').textContent = 'આગળનો શબ્દ';
+                document.getElementById('wordNextBtn').onclick = nextWordQuestion;
+                document.getElementById('wordNextBtn').disabled = true;
+                
+                // Auto-advance after a delay
+                setTimeout(() => {
+                    showWordQuestion();
+                }, 1500);
+            } else {
+                document.getElementById('wordNextBtn').textContent = 'ક્વિઝ ફરી શરૂ કરો';
+                document.getElementById('wordNextBtn').onclick = () => initWordQuiz();
+                document.getElementById('wordNextBtn').disabled = false;
+                
+                // Show final score
+                const feedback = document.getElementById('wordFeedback');
+                feedback.textContent = `ક્વિઝ પૂર્ણ! તમારો સ્કોર: ${wordScore}/${wordQuestions.length}`;
+                
+                // Update progress to 100%
+                document.getElementById('wordProgressFill').style.width = '100%';
+            }
+        }
+        
+        function updateScore() {
+            const activeQuiz = wordQuizBtn.classList.contains('active') ? 'word' : 'sentence';
+            if (activeQuiz === 'word') {
+                document.getElementById('score').textContent = wordScore;
+                document.getElementById('totalQuestions').textContent = wordQuestions.length;
+            } else {
+                document.getElementById('score').textContent = sentenceScore;
+                document.getElementById('totalQuestions').textContent = sentenceQuestions.length;
+            }
+        }
+        
+        // Initialize the application when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initSlideshow();
+            
+            // Set up event listeners for quiz buttons
+            document.getElementById('quizNextBtn').addEventListener('click', nextSentenceQuestion);
+            document.getElementById('wordNextBtn').addEventListener('click', nextWordQuestion);
+        });
+    </script>
+</body>
+</html>
